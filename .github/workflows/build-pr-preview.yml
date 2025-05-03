@@ -29,6 +29,7 @@ jobs:
 
       - name: Store PR id
         run: |
+          mkdir -p ./target/roq
           echo ${{ github.event.number }} > ./target/roq/pr-id.txt
 
       - name: Publishing docs
