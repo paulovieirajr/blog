@@ -10,8 +10,12 @@ on:
       - '*.txt'
       - '.all-contributorsrc'
 
+defaults:
+  run:
+    shell: bash
+
 permissions:
-  pull-requests: write # Necessário para comentar no PR
+  pull-requests: write # Required to update PR status comment
 
 jobs:
   build-and-preview:
