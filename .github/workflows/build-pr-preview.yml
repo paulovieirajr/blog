@@ -1,4 +1,4 @@
-name: Build PR Preview
+name: Build & Preview PR
 
 on:
   pull_request:
@@ -10,9 +10,11 @@ on:
       - '*.txt'
       - '.all-contributorsrc'
 
+permissions:
+  pull-requests: write # Necessário para comentar no PR
+
 jobs:
-  build-website:
-    name: Build Website
+  build-and-preview:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -28,16 +30,8 @@ jobs:
         run: QUARKUS_ROQ_GENERATOR_BATCH=true mvn -B package quarkus:run
 
       - name: Store PR id
-        run: |
-          mkdir -p ./target/roq/docs
-          echo ${{ github.event.number }} > ./target/roq/docs/pr-id.txt
-
-      - name: Publishing docs
-        uses: actions/upload-artifact@v4
-        with:
-          name: docs
-          path: ./target/roq
-          retention-days: 3
+        id: pr
+        run: echo "pr_number=${{ github.event.number }}" >> $GITHUB_OUTPUT
 
       - name: Build blog
         uses: quarkiverse/quarkus-roq@main
@@ -48,9 +42,17 @@ jobs:
           site-future: 'true'
           maven-executable: 'mvn'
 
-      - name: Publishing blog
-        uses: actions/upload-artifact@v4
+      - name: Publish blog to Surge.sh
+        run: |
+          npx surge ./target/roq --domain https://quarkusclub-blog-${{ steps.pr.outputs.pr_number }}-preview.surge.sh --token ${{ secrets.SURGE_TOKEN }}
+
+      - name: Comment preview URL on PR
+        uses: quarkusio/action-helpers@main
         with:
-          name: blog
-          path: ./target/roq
-          retention-days: 3
+          action: maintain-one-comment
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          pr-number: ${{ steps.pr.outputs.pr_number }}
+          body: |
+            🚀 PR Preview para **blog** e **(opcionalmente)** docs foi gerado com sucesso!
+            * https://quarkusclub-blog-${{ steps.pr.outputs.pr_number }}-preview.surge.sh
+          body-marker: <!-- Preview status comment marker -->
