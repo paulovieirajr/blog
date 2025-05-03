@@ -44,7 +44,7 @@ jobs:
         with:
           setup-java: 'false'
           github-pages: 'false'
-          site-directory: 'blog'
+          site-directory: '.'
           site-future: 'true'
           maven-executable: 'mvn'
 
