@@ -32,12 +32,12 @@ jobs:
           mkdir -p ./target/roq/docs
           echo ${{ github.event.number }} > ./target/roq/docs/pr-id.txt
 
-#      - name: Publishing docs
-#        uses: actions/upload-artifact@v4
-#        with:
-#          name: docs
-#          path: ./target/roq
-#          retention-days: 3
+      - name: Publishing docs
+        uses: actions/upload-artifact@v4
+        with:
+          name: docs
+          path: ./target/roq
+          retention-days: 3
 
       - name: Build blog
         uses: quarkiverse/quarkus-roq@main
