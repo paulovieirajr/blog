@@ -40,12 +40,7 @@ jobs:
           retention-days: 3
 
       - name: Build blog
-        uses: ./
-        with:
-          setup-java: 'false'
-          github-pages: 'false'
-          site-future: 'true'
-          maven-executable: 'mvn'
+        run: mvn clean install -DskipTests -Dno-format
 
       - name: Publishing blog
         uses: actions/upload-artifact@v4
