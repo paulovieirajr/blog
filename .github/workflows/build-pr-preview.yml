@@ -53,6 +53,6 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           pr-number: ${{ steps.pr.outputs.pr_number }}
           body: |
-            🚀 PR Preview para **blog** e **(opcionalmente)** docs foi gerado com sucesso!
+            🚀 PR Preview for **blog** ${{ github.sha }} has been successfully built!
             * https://quarkusclub-blog-${{ steps.pr.outputs.pr_number }}-preview.surge.sh
           body-marker: <!-- Preview status comment marker -->
