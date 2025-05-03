@@ -25,22 +25,28 @@ jobs:
           cache: 'maven'
 
       - name: Build Roq
-        run: mvn -B clean install --file pom.xml -DskipTests -Dno-format
+        run: QUARKUS_ROQ_GENERATOR_BATCH=true mvn -B package quarkus:run
 
       - name: Store PR id
         run: |
-          mkdir -p ./target/roq
-          echo ${{ github.event.number }} > ./target/roq/pr-id.txt
+          mkdir -p ./target/roq/docs
+          echo ${{ github.event.number }} > ./target/roq/docs/pr-id.txt
 
-      - name: Publishing docs
-        uses: actions/upload-artifact@v4
-        with:
-          name: docs
-          path: ./target/roq
-          retention-days: 3
+#      - name: Publishing docs
+#        uses: actions/upload-artifact@v4
+#        with:
+#          name: docs
+#          path: ./target/roq
+#          retention-days: 3
 
       - name: Build blog
-        run: mvn clean install -DskipTests -Dno-format
+        uses: ./
+        with:
+          setup-java: 'false'
+          github-pages: 'false'
+          site-directory: 'blog'
+          site-future: 'true'
+          maven-executable: 'mvn'
 
       - name: Publishing blog
         uses: actions/upload-artifact@v4
