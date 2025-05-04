@@ -1,10 +1,8 @@
 name: Preview Teardown
 
 on:
-  pull_request_target:
-    paths:
-      - '*.adoc'
-    types: [ closed ]
+  pull_request:
+    types: [closed]
 
 jobs:
   preview-teardown:
